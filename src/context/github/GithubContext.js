@@ -22,6 +22,13 @@ export const GithubProvider = ({ children }) => {
   // Set loading
   const setLoading = () => dispatch({ type: 'SET_LOADING' })
 
+  // Clear search results from state
+  const clearUsers = () => {
+    dispatch({
+      type: 'CLEAR_USERS',
+    })
+  }
+
   // Get search results
   const searchUsers = async (text) => {
     setLoading()
@@ -38,12 +45,6 @@ export const GithubProvider = ({ children }) => {
 
     const { items } = await response.json() // from Github API
 
-    console.log(items)
-    // When using useState
-    // setUsers(data)
-    // setIsLoading(false)
-
-    // When switch to useReducer
     dispatch({
       type: 'GET_USERS',
       payload: items,
@@ -76,7 +77,12 @@ export const GithubProvider = ({ children }) => {
 
   return (
     <GithubContext.Provider
-      value={{ users: state.users, isLoading: state.isLoading, searchUsers }}
+      value={{
+        users: state.users,
+        isLoading: state.isLoading,
+        searchUsers,
+        clearUsers,
+      }}
     >
       {children}
     </GithubContext.Provider>
