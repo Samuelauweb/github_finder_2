@@ -31,27 +31,27 @@ export const GithubProvider = ({ children }) => {
     })
   }
 
-  // Get search results
-  const searchUsers = async (text) => {
-    setLoading()
+  // Get search results (moved to GithubActions.js)
+  // const searchUsers = async (text) => {
+  //   setLoading()
 
-    const params = new URLSearchParams({
-      q: text,
-    })
+  //   const params = new URLSearchParams({
+  //     q: text,
+  //   })
 
-    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-      },
-    })
+  //   const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
+  //     headers: {
+  //       Authorization: `token ${GITHUB_TOKEN}`,
+  //     },
+  //   })
 
-    const { items } = await response.json() // from Github API
+  //   const { items } = await response.json() // from Github API
 
-    dispatch({
-      type: 'GET_USERS',
-      payload: items,
-    })
-  }
+  //   dispatch({
+  //     type: 'GET_USERS',
+  //     payload: items,
+  //   })
+  // }
 
   // Get single user
   const getUser = async (login) => {
@@ -128,11 +128,8 @@ export const GithubProvider = ({ children }) => {
   return (
     <GithubContext.Provider
       value={{
-        users: state.users,
-        user: state.user,
-        repos: state.repos,
-        isLoading: state.isLoading,
-        searchUsers,
+        ...state,
+        dispatch,
         clearUsers,
         getUser,
         getUserRepos,
