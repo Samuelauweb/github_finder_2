@@ -4,14 +4,17 @@ import { useParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import Spinner from '../components/layout/Spinner'
 import GithubContext from '../context/github/GithubContext'
+import RepoList from '../components/repos/RepoList'
 
 function User() {
-  const { user, getUser, isLoading } = useContext(GithubContext)
+  const { user, getUser, isLoading, repos, getUserRepos } =
+    useContext(GithubContext)
 
   const params = useParams()
 
   useEffect(() => {
     getUser(params.login)
+    getUserRepos(params.login)
   }, [])
 
   const {
@@ -43,6 +46,7 @@ function User() {
             Back To Search
           </Link>
         </div>
+        
         <div className='grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 mb-8 md:gap-8'>
           {/* Wrapper div */}
           <div className='custom-card-image mb-6 md:mb-0'>
@@ -114,6 +118,7 @@ function User() {
             </div>
           </div>
         </div>
+
         <div className='w-full py-5 mb-6 rounded-lg shadow-md bg-base-100 stats'>
           <div className='stat'>
             <div className='stat-figure text-secondary'>
@@ -152,6 +157,8 @@ function User() {
             </div>
           </div>
         </div>
+
+        <RepoList repos={repos} />
       </div>
     </>
   )
