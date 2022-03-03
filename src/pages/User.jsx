@@ -5,17 +5,27 @@ import { Link } from 'react-router-dom'
 import Spinner from '../components/layout/Spinner'
 import GithubContext from '../context/github/GithubContext'
 import RepoList from '../components/repos/RepoList'
+import { getUser, getUserRepos } from '../context/github/GithubActions'
 
 function User() {
-  const { user, getUser, isLoading, repos, getUserRepos } =
-    useContext(GithubContext)
+  const { user, isLoading, repos, dispatch } = useContext(GithubContext)
 
   const params = useParams()
 
   useEffect(() => {
-    getUser(params.login)
-    getUserRepos(params.login)
-  }, [])
+    // getUser(params.login)
+    // getUserRepos(params.login)
+    dispatch({ type: 'SET_LOADING' })
+    const getUserData = async () => {
+      const userData = await getUser(params.login)
+      dispatch({ type: 'GET_USER', payload: userData })
+
+      const userRepoData = await getUserRepos(params.login)
+      dispatch({ type: 'GET_REPOS', payload: userRepoData })
+    }
+
+    getUserData()
+  }, [dispatch, params.login])
 
   const {
     name,
@@ -46,7 +56,7 @@ function User() {
             Back To Search
           </Link>
         </div>
-        
+
         <div className='grid grid-cols-1 xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-3 mb-8 md:gap-8'>
           {/* Wrapper div */}
           <div className='custom-card-image mb-6 md:mb-0'>
